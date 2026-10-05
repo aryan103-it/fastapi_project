@@ -40,27 +40,33 @@ def get_post(id: int, db:Session=Depends(get_db)):
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session=Depends(get_db),user_id: int= Depends(oauth2.get_current_user)):
+def delete_post(id: int, db: Session=Depends(get_db),user: int= Depends(oauth2.get_current_user)):
 
-    posts = db.query(models.Post).filter(models.Post.id == id)
-    if  posts.first()== None:
+    posts = db.query(models.Post).filter(models.Post.id == id).first()
+
+    if  posts == None:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail= f"Post with id:{id}, NOT_FOUND")
+    print(posts.user_id, user)
+    if user != posts.user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authorized")
     
-    posts.delete(synchronize_session=False)
+    db.delete(posts)
     db.commit()
     return Response(status_code= status.HTTP_204_NO_CONTENT)
 
 
 @router.put("/{id}",response_model=schemas.PostResponse)
-def update_post(id: int, post: schemas.PostUpdate,db: Session=Depends(get_db),user_id: int= Depends(oauth2.get_current_user)):
+def update_post(id: int, post: schemas.PostUpdate,db: Session=Depends(get_db),user: int= Depends(oauth2.get_current_user)):
 
     post_query= db.query(models.Post).filter(models.Post.id==id)
-    updated_post= post_query.first()
+    updated_post= post_query
+    posts=post_query.first()
 
     if updated_post == None:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail= f"Post with id:{id}, NOT_FOUND")
-    
+    if user != posts.user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authorized")    
     post_query.update(post.dict(), synchronize_session=False)
     db.commit()
-
-    return post_query.first() 
+    db.refresh(posts)
+    return posts
