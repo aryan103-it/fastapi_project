@@ -20,9 +20,9 @@ def get_post(db: Session= Depends(get_db)):
 
 
 @router.post("/",response_model=schemas.PostResponse)
-def posts(post: schemas.PostCreate, db:Session = Depends(get_db), user_id: int= Depends(oauth2.get_current_user)):
-    print(user_id)
-    new_post= models.Post(**post.dict())
+def posts(post: schemas.PostCreate, db:Session = Depends(get_db), user: int= Depends(oauth2.get_current_user)):
+    print(user)
+    new_post= models.Post(**post.dict(), user_id=user)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
