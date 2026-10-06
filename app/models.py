@@ -2,6 +2,17 @@ from .database import Base
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql.expression import text
+from sqlalchemy.orm import relationship
+
+
+class Users(Base):
+    __tablename__="users"
+    id=Column(Integer, primary_key=True, nullable=False)
+    email= Column(String, nullable=False, unique=True)
+    password= Column(String, nullable=False, unique=False)
+    created_at=Column(TIMESTAMP, nullable=False, server_default=text('now()'))
+
+
 class Post(Base):
     __tablename__= "posts"
 
@@ -12,9 +23,6 @@ class Post(Base):
     created_at=Column(TIMESTAMP, nullable=False, server_default=text('now()'))
     user_id= Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
-class Users(Base):
-    __tablename__="users"
-    id=Column(Integer, primary_key=True, nullable=False)
-    email= Column(String, nullable=False, unique=True)
-    password= Column(String, nullable=False, unique=False)
-    created_at=Column(TIMESTAMP, nullable=False, server_default=text('now()'))
+    user= relationship("Users")
+
+
