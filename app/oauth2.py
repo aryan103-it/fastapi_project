@@ -41,7 +41,11 @@ def verify_access_token(token: str, details_exception):
 
 def get_current_user(token: str= Depends(oauth2_scheme)):
 
-    details_exception= HTTPException(status_code= status.HTTP_401_UNAUTHORIZED, detail="Could not validate details", headers={"WWW-Authenticate": "Bearer"})
+    details_exception= HTTPException(
+        status_code= status.HTTP_401_UNAUTHORIZED, 
+        detail="Could not validate details", 
+        headers={"WWW-Authenticate": "Bearer"}
+        )
 
     return verify_access_token(token, details_exception)
     

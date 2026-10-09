@@ -42,6 +42,7 @@ class PostResponse(PostBase):
 class PostVote(BaseModel):
     post: PostResponse
     up_votes:int
+    down_votes:int
 
     class Config:
         from_attributes = True

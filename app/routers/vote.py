@@ -16,13 +16,24 @@ def vote(vote:schemas.Vote, db:Session=Depends(get_db), user:int= Depends(oauth2
 
     find_vote= db.query(models.Votes).filter(models.Votes.post_id==vote.post_id, models.Votes.user_id==user).first()
     if vote.dir == 1:
-        if find_vote:
+        find_upvote= db.query(models.Votes).filter(models.Votes.post_id==vote.post_id, models.Votes.user_id==user, dir == 1).first()
+        if find_upvote:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"User with id {user} already voted")
         
-        new_vote= models.Votes(post_id=vote.post_id, user_id=user)
+        new_vote= models.Votes(post_id=vote.post_id, user_id=user, dir=1)
         db.add(new_vote)
         db.commit()
-        return "Voted Sucessfully!!!"
+        return "Upvoted Sucessfully!!!"
+    if vote.dir == -1:
+        find_downvote= db.query(models.Votes).filter(models.Votes.post_id==vote.post_id, models.Votes.user_id==user, dir == -1).first()  
+        if find_downvote:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"User with id {user} already voted")
+        
+        new_vote= models.Votes(post_id=vote.post_id, user_id=user, dir=-1)
+        db.add(new_vote)
+        db.commit()
+        return "Downvoted Sucessfully!!!"
+
     if vote.dir == 0:
         if not find_vote:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"User {user} don't have vote in post {vote.post_id}")
