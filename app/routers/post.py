@@ -28,7 +28,6 @@ def get_post(db: Session= Depends(get_db), limit: int= 10, skip : int= 0, search
 
 @router.post("/",response_model=schemas.PostResponse)
 def posts(post: schemas.PostCreate, db:Session = Depends(get_db), user: int= Depends(oauth2.get_current_user)):
-    print(user)
     new_post= models.Post(**post.dict(), user_id=user)
     db.add(new_post)
     db.commit()
@@ -58,7 +57,6 @@ def delete_post(id: int, db: Session=Depends(get_db),user: int= Depends(oauth2.g
 
     if  posts == None:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail= f"Post with id:{id}, NOT_FOUND")
-    print(posts.user_id, user)
     if user != posts.user_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authorized")
     
@@ -71,10 +69,9 @@ def delete_post(id: int, db: Session=Depends(get_db),user: int= Depends(oauth2.g
 def update_post(id: int, post: schemas.PostUpdate,db: Session=Depends(get_db),user: int= Depends(oauth2.get_current_user)):
 
     post_query= db.query(models.Post).filter(models.Post.id==id)
-    updated_post= post_query
     posts=post_query.first()
 
-    if updated_post == None:
+    if posts == None:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail= f"Post with id:{id}, NOT_FOUND")
     if user != posts.user_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authorized")    
