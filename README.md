@@ -15,6 +15,7 @@ While working on this project, I've been getting hands-on experience with FastAP
 - **Database Integration** — Store and manage data using PostgreSQL and SQLAlchemy.
 - **Database Migrations** — Keep track of database schema changes using Alembic.
 - **Interactive API Docs** — Explore and test endpoints through FastAPI's Swagger UI.
+- **Code Formatting** — Use Black to keep Python code clean and consistently formatted.
 
 ## Tech Stack
 
@@ -29,6 +30,7 @@ While working on this project, I've been getting hands-on experience with FastAP
 | JWT | Handling authentication tokens |
 | Argon2 | Password hashing |
 | Uvicorn | Running the application |
+| Black | Python code formatting |
 
 ## Getting Started
 
