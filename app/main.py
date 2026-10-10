@@ -1,13 +1,14 @@
 from fastapi import FastAPI, Depends
+
 # from . import models
-from .database import  get_db, engine
+from .database import get_db, engine
 from .routers import post, user, auth, vote
 from fastapi.middleware.cors import CORSMiddleware
 
 # models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-origins=['*']
+origins = ["*"]
 
 
 app.add_middleware(
@@ -23,7 +24,7 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(vote.router)
 
+
 @app.get("/")
 def read_root():
     return {"Hello": "World !!!!!"}
-

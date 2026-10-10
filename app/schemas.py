@@ -4,30 +4,36 @@ from typing import Annotated
 
 
 class UserCreate(BaseModel):
-    email:EmailStr
+    email: EmailStr
     password: str
+
 
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
 
     class Config:
-        from_attributes= True
+        from_attributes = True
+
 
 class UserLogin(BaseModel):
-    email:EmailStr
+    email: EmailStr
     password: str
+
+
 class PostBase(BaseModel):
     title: str
     content: str
-    published: bool= True
+    published: bool = True
 
 
 class PostCreate(PostBase):
     pass
 
+
 class PostUpdate(PostBase):
-    pass 
+    pass
+
 
 class PostResponse(PostBase):
 
@@ -39,10 +45,11 @@ class PostResponse(PostBase):
     class Config:
         from_attributes = True
 
+
 class PostVote(BaseModel):
     post: PostResponse
-    up_votes:int
-    down_votes:int
+    up_votes: int
+    down_votes: int
 
     class Config:
         from_attributes = True
@@ -52,8 +59,10 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
-    user_id : int
+    user_id: int
+
 
 class Vote(BaseModel):
     post_id: int
